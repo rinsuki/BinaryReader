@@ -17,6 +17,12 @@ public struct BinaryReader {
         case big
     }
     
+    public init(data: Data, pointer: UInt = 0, endian: Endian = .little) {
+        self.data = data
+        self.pointer = pointer
+        self.endian = endian
+    }
+    
     public var isEnd: Bool {
         return pointer == data.count
     }
