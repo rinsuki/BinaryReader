@@ -2,14 +2,33 @@ import XCTest
 @testable import BinaryReader
 
 final class BinaryReaderTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-//        XCTAssertEqual()
+    func testLittleEndian() {
+        let d = Data(base64Encoded: "Af8CAP//AwAAAP////8=")!
+        var reader = BinaryReader(data: d, endian: .little)
+        XCTAssertEqual(reader.uint8(), 1)
+        XCTAssertEqual(reader.int8(), -1)
+        XCTAssertEqual(reader.uint16(), 2)
+        XCTAssertEqual(reader.int16(), -1)
+        XCTAssertEqual(reader.uint32(), 3)
+        XCTAssertEqual(reader.isEnd, false)
+        XCTAssertEqual(reader.int32(), -1)
+        XCTAssertEqual(reader.isEnd, true)
+    }
+    
+    func testBigEndian() {
+        let d = Data(base64Encoded: "Af8AAv//AAAAA/////8=")!
+        var reader = BinaryReader(data: d, endian: .big)
+        XCTAssertEqual(reader.uint8(), 1)
+        XCTAssertEqual(reader.int8(), -1)
+        XCTAssertEqual(reader.uint16(), 2)
+        XCTAssertEqual(reader.int16(), -1)
+        XCTAssertEqual(reader.uint32(), 3)
+        XCTAssertEqual(reader.isEnd, false)
+        XCTAssertEqual(reader.int32(), -1)
+        XCTAssertEqual(reader.isEnd, true)
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testLittleEndian", testLittleEndian),
     ]
 }
