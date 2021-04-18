@@ -96,4 +96,12 @@ public struct BinaryReader {
     public mutating func int64() -> Int64 {
         return .init(bitPattern: uint64())
     }
+    
+    public mutating func float32() -> Float32 {
+        return .init(bitPattern: uint32())
+    }
+    
+    public mutating func float64() -> Float64 {
+        return .init(bitPattern: uint64())
+    }
 }
