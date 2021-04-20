@@ -52,7 +52,7 @@ public struct BinaryReader {
     }
     
     public mutating func cStr(encoding: String.Encoding = .utf8) -> String {
-        let prefixedData = data.suffix(from: Int(pointer))
+        let prefixedData = data.suffix(from: data.startIndex + Int(pointer))
         let endIndex = prefixedData.firstIndex(of: 0)!
         let stringData = prefixedData[prefixedData.startIndex..<endIndex]
         pointer += UInt(stringData.count) + 1
