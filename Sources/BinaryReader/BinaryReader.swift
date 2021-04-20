@@ -63,9 +63,11 @@ public struct BinaryReader {
         let b = bytes(count: 1)
         return b.first!
     }
+    @inline(__always)
     public mutating func int8() -> Int8 {
         return .init(bitPattern: uint8())
     }
+    @inline(__always)
     public mutating func bool() -> Bool {
         return uint8() != 0
     }
@@ -75,6 +77,7 @@ public struct BinaryReader {
         let v = UInt16(b[0]) | UInt16(b[1]) << 8
         return v
     }
+    @inline(__always)
     public mutating func int16() -> Int16 {
         return .init(bitPattern: uint16())
     }
@@ -83,6 +86,7 @@ public struct BinaryReader {
         let b = endianConvert(from: bytes(count: 4))
         return UInt32(b[0]) | UInt32(b[1]) << 8 | UInt32(b[2]) << 16 | UInt32(b[3]) << 24
     }
+    @inline(__always)
     public mutating func int32() -> Int32 {
         return .init(bitPattern: uint32())
     }
@@ -93,14 +97,17 @@ public struct BinaryReader {
         let upper: UInt64 = UInt64(b[4]) << 32 | UInt64(b[5]) << 40 | UInt64(b[6]) << 48 | UInt64(b[7]) << 56
         return lower | upper
     }
+    @inline(__always)
     public mutating func int64() -> Int64 {
         return .init(bitPattern: uint64())
     }
     
+    @inline(__always)
     public mutating func float32() -> Float32 {
         return .init(bitPattern: uint32())
     }
     
+    @inline(__always)
     public mutating func float64() -> Float64 {
         return .init(bitPattern: uint64())
     }
