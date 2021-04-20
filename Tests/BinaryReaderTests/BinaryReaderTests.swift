@@ -28,6 +28,18 @@ final class BinaryReaderTests: XCTestCase {
         XCTAssertEqual(reader.isEnd, true)
     }
     
+    func testBothEndian() {
+        let d = Data(base64Encoded: "AQACAwAAAAAAAAAAAAAE")!
+        var reader = BinaryReader(data: d)
+        reader.endian = .big
+        XCTAssertEqual(reader.uint8(), 1)
+        XCTAssertEqual(reader.uint16(), 2)
+        reader.endian = .little
+        XCTAssertEqual(reader.uint32(), 3)
+        reader.endian = .big
+        XCTAssertEqual(reader.uint64(), 4)
+    }
+    
     func testCStr() {
         let d = "ABC\u{00}".data(using: .utf8)!
         var reader = BinaryReader(data: d)
@@ -40,6 +52,7 @@ final class BinaryReaderTests: XCTestCase {
     static var allTests = [
         ("testLittleEndian", testLittleEndian),
         ("testBigEndian", testBigEndian),
+        ("testBothEndian", testBothEndian),
         ("testCStr", testCStr),
     ]
 }
