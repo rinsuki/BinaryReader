@@ -104,4 +104,8 @@ public struct BinaryReader {
     public mutating func float64() -> Float64 {
         return .init(bitPattern: uint64())
     }
+    
+    public mutating func align(_ n: UInt) {
+        pointer = UInt(pointer / n) * n
+    }
 }
