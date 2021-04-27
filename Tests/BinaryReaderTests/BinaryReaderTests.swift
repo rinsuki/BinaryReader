@@ -48,6 +48,18 @@ final class BinaryReaderTests: XCTestCase {
         var reader2 = BinaryReader(data: d2)
         XCTAssertEqual(reader2.cStr(), "BC")
     }
+    
+    func testPerformance() {
+        let d = "ABCDEFGHIJKL".data(using: .utf8)!
+        measure {
+            for _ in 0..<100000 {
+                var reader = BinaryReader(data: d)
+                reader.endian = .little
+                XCTAssertEqual(reader.uint32(), 1145258561)
+                XCTAssertEqual(reader.uint64(), 5497569448741520965)
+            }
+        }
+    }
 
     static var allTests = [
         ("testLittleEndian", testLittleEndian),
