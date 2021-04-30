@@ -23,6 +23,7 @@ public struct BinaryReader {
         self.endian = endian
     }
     
+    @inline(__always)
     public var isEnd: Bool {
         return pointer == data.count
     }
@@ -42,15 +43,6 @@ public struct BinaryReader {
         return data[startIndex..<startIndex.advanced(by: Int(count))]
     }
     
-    public func endianConvert(from: Data) -> Data {
-        switch endian {
-        case .little:
-            return Data(from)
-        case .big:
-            return Data(from.reversed())
-        }
-    }
-    
     public mutating func cStr(encoding: String.Encoding = .utf8) -> String {
         let prefixedData = data.suffix(from: data.startIndex + Int(pointer))
         let endIndex = prefixedData.firstIndex(of: 0)!
@@ -60,8 +52,8 @@ public struct BinaryReader {
     }
     
     public mutating func uint8() -> UInt8 {
-        let b = bytes(count: 1)
-        return b.first!
+        let b = bytes(count: 1).withUnsafeBytes { $0.load(as: UInt8.self) }
+        return b
     }
     @inline(__always)
     public mutating func int8() -> Int8 {
@@ -73,9 +65,13 @@ public struct BinaryReader {
     }
     
     public mutating func uint16() -> UInt16 {
-        let b = endianConvert(from: bytes(count: 2))
-        let v = UInt16(b[0]) | UInt16(b[1]) << 8
-        return v
+        let b: UInt16 = bytes(count: 2).withUnsafeBytes { $0.pointee }
+        switch endian {
+        case .little:
+            return .init(littleEndian: b)
+        case .big:
+            return .init(bigEndian: b)
+        }
     }
     @inline(__always)
     public mutating func int16() -> Int16 {
@@ -83,8 +79,13 @@ public struct BinaryReader {
     }
     
     public mutating func uint32() -> UInt32 {
-        let b = endianConvert(from: bytes(count: 4))
-        return UInt32(b[0]) | UInt32(b[1]) << 8 | UInt32(b[2]) << 16 | UInt32(b[3]) << 24
+        let b: UInt32 = bytes(count: 4).withUnsafeBytes { $0.pointee }
+        switch endian {
+        case .little:
+            return .init(littleEndian: b)
+        case .big:
+            return .init(bigEndian: b)
+        }
     }
     @inline(__always)
     public mutating func int32() -> Int32 {
@@ -92,10 +93,13 @@ public struct BinaryReader {
     }
     
     public mutating func uint64() -> UInt64 {
-        let b = endianConvert(from: bytes(count: 8))
-        let lower: UInt64 = UInt64(b[0]) | UInt64(b[1]) << 8 | UInt64(b[2]) << 16 | UInt64(b[3]) << 24
-        let upper: UInt64 = UInt64(b[4]) << 32 | UInt64(b[5]) << 40 | UInt64(b[6]) << 48 | UInt64(b[7]) << 56
-        return lower | upper
+        let b: UInt64 = bytes(count: 8).withUnsafeBytes { $0.pointee }
+        switch endian {
+        case .little:
+            return .init(littleEndian: b)
+        case .big:
+            return .init(bigEndian: b)
+        }
     }
     @inline(__always)
     public mutating func int64() -> Int64 {
