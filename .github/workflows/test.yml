@@ -31,10 +31,10 @@ jobs:
       if: startsWith(matrix.os, 'windows-')
       with:
         path: swift-installer.exe
-        key: "${{ runner.os }}-https://swift.org/builds/development/windows10/swift-DEVELOPMENT-SNAPSHOT-2021-02-24-a/swift-DEVELOPMENT-SNAPSHOT-2021-02-24-a-windows10.exe"
+        key: "${{ runner.os }}-https://swift.org/builds/swift-5.4.2-release/windows10/swift-5.4.2-RELEASE/swift-5.4.2-RELEASE-windows10.exe"
     - name: Download Swift (Windows)
       if: startsWith(matrix.os, 'windows-') && steps.cached-swift-installer.outputs.cache-hit != 'true'
-      run: curl -o swift-installer.exe https://swift.org/builds/development/windows10/swift-DEVELOPMENT-SNAPSHOT-2021-02-24-a/swift-DEVELOPMENT-SNAPSHOT-2021-02-24-a-windows10.exe
+      run: curl -o swift-installer.exe https://swift.org/builds/swift-5.4.2-release/windows10/swift-5.4.2-RELEASE/swift-5.4.2-RELEASE-windows10.exe
     - name: Install Swift (Windows)
       if: startsWith(matrix.os, 'windows-')
       run: Start-Process -Wait -FilePath swift-installer.exe -ArgumentList ("/quiet", "/norestart")
