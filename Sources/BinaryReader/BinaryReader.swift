@@ -117,6 +117,9 @@ public struct BinaryReader {
     }
     
     public mutating func align(_ n: UInt) {
-        pointer = UInt(pointer / n) * n
+        let add = pointer % n
+        if add > 0 {
+            pointer += n - add
+        }
     }
 }

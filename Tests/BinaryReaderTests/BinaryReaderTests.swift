@@ -49,6 +49,20 @@ final class BinaryReaderTests: XCTestCase {
         XCTAssertEqual(reader2.cStr(), "BC")
     }
     
+    func testAlign() {
+        let d = "ABCDEFGHIJKLMN".data(using: .utf8)!
+        var reader = BinaryReader(data: d)
+        XCTAssertEqual(reader.pointer, 0)
+        _ = reader.uint8()
+        XCTAssertEqual(reader.pointer, 1)
+        reader.align(2)
+        XCTAssertEqual(reader.pointer, 2)
+        reader.align(2)
+        XCTAssertEqual(reader.pointer, 2)
+        reader.align(4)
+        XCTAssertEqual(reader.pointer, 4)
+    }
+    
     func testPerformance() {
         let d = "ABCDEFGHIJKL".data(using: .utf8)!
         measure {
@@ -66,5 +80,6 @@ final class BinaryReaderTests: XCTestCase {
         ("testBigEndian", testBigEndian),
         ("testBothEndian", testBothEndian),
         ("testCStr", testCStr),
+        ("testAlign", testAlign),
     ]
 }
